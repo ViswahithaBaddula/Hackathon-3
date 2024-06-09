@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flashcard App</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <!-- Google Fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <!-- Stylesheet -->
+    <style>
+        body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('file:///C:/Users/hitha/Downloads/modified.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.container {
+    width: 80%;
+    max-width: 600px;
+    background-color: transparent;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.hide {
+    display: none;
+}
+
+.auth-form {
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.auth-form h2 {
+    margin-bottom: 20px;
+}
+
+.auth-form .input-row {
+    margin-bottom: 15px;
+}
+
+.auth-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333333;
+}
+
+.auth-form .input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.auth-form .input:focus {
+    border-color: #342cc7;
+}
+
+.auth-form button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #6c63ff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.auth-form button:hover {
+    background-color: #5753c9;
+}
+
+.auth-form p {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.auth-form p a {
+    color: #6c63ff;
+    text-decoration: none;
+}
+
+.auth-form p a:hover {
+    color: #5753c9;
+}
+
+.add-flashcard-con {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#add-flashcard {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #6c63ff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#add-flashcard:hover {
+    background-color: #5753c9;
+}
+
+.card-list-container {
+    margin-top: 20px;
+}
+
+.card {
+    padding: 15px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    position: relative;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.question-div {
+    font-weight: bold;
+    color: #333333;
+}
+
+.answer-div {
+    margin-top: 10px;
+    color: #666666;
+}
+
+.show-hide-btn {
+    display: inline-block;
+    margin-top: 10px;
+    cursor: pointer;
+    color: #6c63ff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.show-hide-btn:hover {
+    color: #5753c9;
+}
+
+.buttons-con {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.edit,
+.delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    color: #666666;
+    transition: color 0.3s ease;
+}
+
+.edit:hover,
+.delete:hover {
+    color: #333333;
+}
+
+.question-container {
+    width: 80%;
+    max-width: 400px;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    max-height: 80vh;
+    /* Set a maximum height to limit the scrollable area */
+}
+
+/* Ensure the container remains centered when scrolling */
+.question-container.hide {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.input-row {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333333;
+}
+
+.input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.input:focus {
+    border-color: #342cc7;
+}
+
+#error {
+    color: #ff4d4d;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="auth-container">
+            <div id="login-form" class="auth-form">
+                <h2>Login</h2>
+                <div class="input-row">
+                    <label for="login-username">Username:</label>
+                    <input type="text" class="input" id="login-username" placeholder="Username" />
+                </div>
+                <div class="input-row">
+                    <label for="login-password">Password:</label>
+                    <input type="password" class="input" id="login-password" placeholder="Password" />
+                </div>
+                <button id="login-btn">Login</button>
+                <p>Don't have an account? <a href="#" id="show-register">Register</a></p>
+            </div>
+            <div id="register-form" class="auth-form hide">
+                <h2>Register</h2>
+                <div class="input-row">
+                    <label for="register-username">Username:</label>
+                    <input type="text" class="input" id="register-username" placeholder="Username" />
+                </div>
+                <div class="input-row">
+                    <label for="register-password">Password:</label>
+                    <input type="password" class="input" id="register-password" placeholder="Password" />
+                </div>
+                <button id="register-btn">Register</button>
+                <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+            </div>
+        </div>
+        <div id="flashcard-container" class="hide">
+            <div class="add-flashcard-con">
+                <button id="add-flashcard">Add Flashcard</button>
+            </div>
+            <!-- Display Card of Question And Answers Here -->
+            <div id="card-con">
+                <div class="card-list-container"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Input form for users to fill question and answer -->
+    <div class="question-container hide" id="add-question-card">
+        <h2>Add Flashcard</h2>
+        <div class="wrapper">
+            <!-- Error message-->
+            <div class="error-con">
+                <span class="hide" id="error">Input fields cannot be empty!</span>
+            </div>
+            <!-- Close Button-->
+            <i class="fa-solid fa-xmark" id="close-btn"></i>
+        </div>
+        <div class="input-row">
+            <label for="question">Question:</label>
+            <textarea 
+                class="input"
+                id="question"
+                placeholder="Type the question here..."
+                rows="1"
+            ></textarea>
+        </div>
+        <div class="input-row">
+            <label for="answer">Answer:</label>
+            <textarea 
+                class="input"
+                id="answer"
+                rows="1"
+                placeholder="Type the answer here..."
+            ></textarea>
+        </div>
+        <button id="save-btn" color=" #5753c9">Save</button>
+    </div>
+    <!-- Script-->
+    <script>
+        // script.js
+
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const authContainer = document.getElementById('auth-container');
+    const flashcardContainer = document.getElementById('flashcard-container');
+
+    const showRegisterLink = document.getElementById('show-register');
+    const showLoginLink = document.getElementById('show-login');
+    const loginButton = document.getElementById('login-btn');
+    const registerButton = document.getElementById('register-btn');
+
+    // Show the registration form and hide the login form
+    showRegisterLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        loginForm.classList.add('hide');
+        registerForm.classList.remove('hide');
+    });
+
+    // Show the login form and hide the registration form
+    showLoginLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        registerForm.classList.add('hide');
+        loginForm.classList.remove('hide');
+    });
+
+    // Login button click handler
+    loginButton.addEventListener('click', () => {
+        const username = document.getElementById('login-username').value.trim();
+        const password = document.getElementById('login-password').value.trim();
+
+        if (username && password) {
+            // Simulate successful login (you need backend to actually validate credentials)
+            authContainer.classList.add('hide');
+            flashcardContainer.classList.remove('hide');
+        } else {
+            alert('Please enter a valid username and password.');
+        }
+    });
+
+    // Register button click handler
+    registerButton.addEventListener('click', () => {
+        const username = document.getElementById('register-username').value.trim();
+        const password = document.getElementById('register-password').value.trim();
+
+        if (username && password) {
+            // Simulate successful registration (you need backend to actually register users)
+            alert('Registration successful! Please log in.');
+            registerForm.classList.add('hide');
+            loginForm.classList.remove('hide');
+        } else {
+            alert('Please enter a valid username and password.');
+        }
+    });
+
+    // Existing flashcard code
+    const container = document.querySelector(".container");
+    const addQuestionCard = document.getElementById("add-question-card");
+    const cardButton = document.getElementById("save-btn");
+    const question = document.getElementById("question");
+    const answer = document.getElementById("answer");
+    const errorMessage = document.getElementById("error");
+    const addQuestion = document.getElementById("add-flashcard");
+    const closeBtn = document.getElementById("close-btn");
+    let editBool = false;
+    let currentEditFlashcard = null;
+
+    addQuestion.addEventListener("click", () => {
+        addQuestionCard.classList.remove("hide");
+        question.focus();
+    });
+
+    closeBtn.addEventListener("click", () => {
+        if (editBool && currentEditFlashcard) {
+            currentEditFlashcard = null;
+            addQuestionCard.classList.add("hide");
+        } else {
+            addQuestionCard.classList.add("hide");
+            if (editBool) {
+                editBool = false;
+                submitQuestion();
+            }
+        }
+    });
+
+    cardButton.addEventListener("click", () => {
+        editBool = false;
+        const tempQuestion = question.value.trim();
+        const tempAnswer = answer.value.trim();
+        if (!tempQuestion || !tempAnswer) {
+            errorMessage.classList.remove("hide");
+        } else {
+            addQuestionCard.classList.add("hide");
+            errorMessage.classList.add("hide");
+            viewlist(tempQuestion, tempAnswer);
+            question.value = "";
+            answer.value = "";
+        }
+    });
+
+    function viewlist(tempQuestion, tempAnswer) {
+        const listCard = document.getElementsByClassName("card-list-container");
+        const div = document.createElement("div");
+        div.classList.add("card");
+
+        div.innerHTML += `<p class="question-div">${tempQuestion}</p>`;
+
+        const displayAnswer = document.createElement("p");
+        displayAnswer.classList.add("answer-div");
+        displayAnswer.innerText = tempAnswer;
+        displayAnswer.classList.add("hide");
+
+        const link = document.createElement("a");
+        link.setAttribute("href", "#");
+        link.setAttribute("class", "show-hide-btn");
+        link.innerHTML = "Show/Hide";
+        link.addEventListener("click", (event) => {
+            event.preventDefault();
+            displayAnswer.classList.toggle("hide");
+        });
+
+        div.appendChild(link);
+        div.appendChild(displayAnswer);
+
+        const buttonsCon = document.createElement("div");
+        buttonsCon.classList.add("buttons-con");
+        const editButton = document.createElement("button");
+        editButton.setAttribute("class", "edit");
+        editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+        editButton.addEventListener("click", (event) => {
+            editBool = true;
+            currentEditFlashcard = event.target.closest('.card');
+            const questionText = currentEditFlashcard.querySelector(".question-div").innerText;
+            const answerText = currentEditFlashcard.querySelector(".answer-div").innerText;
+            question.value = questionText;
+            answer.value = answerText;
+            addQuestionCard.classList.remove("hide");
+        });
+        buttonsCon.appendChild(editButton);
+        disableButtons(false);
+
+        const deleteButton = document.createElement("button");
+        deleteButton.setAttribute("class", "delete");
+        deleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+        deleteButton.addEventListener("click", () => {
+            modifyElement(deleteButton);
+        });
+        buttonsCon.appendChild(deleteButton);
+
+        div.appendChild(buttonsCon);
+        listCard[0].appendChild(div);
+    }
+
+    const modifyElement = (element, edit = false) => {
+        const parentDiv = element.parentElement.parentElement;
+        if (!edit) {
+            parentDiv.remove();
+        } else {
+            if (currentEditFlashcard) {
+                currentEditFlashcard = null;
+                addQuestionCard.classList.add("hide");
+            }
+        }
+    };
+
+    const disableButtons = (value) => {
+        const editButtons = document.getElementsByClassName("edit");
+        Array.from(editButtons).forEach((element) => {
+            element.disabled = value;
+        });
+    };
+
+    const inputs = document.querySelectorAll('.input');
+
+    inputs.forEach((input, index) => {
+        input.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+
+                const nextInput = input.parentElement.nextElementSibling.querySelector('input, textarea');
+
+                if (nextInput) {
+                    nextInput.focus();
+                } else {
+                    const saveButton = document.getElementById('save-btn');
+                    if (saveButton) {
+                        saveButton.focus();
+                    }
+                }
+            }
+        });
+
+        if (input.tagName.toLowerCase() === 'textarea') {
+            input.addEventListener('input', () => {
+                input.style.height = 'auto';
+                input.style.height = `${input.scrollHeight}px`;
+            });
+
+            input.style.height = `${input.scrollHeight}px`;
+        }
+    });
+});
+
+    </script>
+</body>
+</html>
